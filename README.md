@@ -1,5 +1,7 @@
 # Avistap — la plaque avis
 
+[![CI](https://github.com/Neo52000/avistap/actions/workflows/ci.yml/badge.svg)](https://github.com/Neo52000/avistap/actions/workflows/ci.yml)
+
 Plateforme e-commerce des plaques NFC « avis Google » : un tunnel de vente
 public et un back office pensé comme une liste de tâches d'atelier.
 
@@ -135,6 +137,16 @@ Queue de production. Le passage en `shipped` déclenche l'email client.
   à ajouter avant une exposition publique durable.
 - `/cgv` et `/mentions-legales` sont des trames à compléter — mentions
   obligatoires pour une vente en ligne en France.
+
+## Intégration continue
+
+`.github/workflows/ci.yml` lance `npm run lint` puis `npm run build` sur chaque
+pull request et sur les poussées vers `main`. `next build` vérifie aussi les
+types TypeScript, donc une erreur de type fait échouer la CI.
+
+Le workflow n'utilise **aucun secret** : il s'appuie sur des variables Supabase
+factices. C'est possible parce qu'aucune page interrogeant la base n'est
+prérendue au build — toutes sont rendues à la demande.
 
 ## Structure
 

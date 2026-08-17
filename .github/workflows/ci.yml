@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Une nouvelle poussée sur une PR annule le run précédent : inutile de payer
+# deux builds pour un état de branche périmé.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Lint et build
+    runs-on: ubuntu-latest
+
+    env:
+      # Valeurs factices : la CI ne doit dépendre d'aucun secret.
+      # Le build ne prérend aucune page qui interroge Supabase (toutes les
+      # pages qui lisent la base sont rendues à la demande), ces variables
+      # servent uniquement à satisfaire l'instanciation des clients.
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_placeholder
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22" # aligné sur netlify.toml
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # `next build` effectue aussi la vérification des types TypeScript :
+      # une erreur de type fait échouer cette étape.
+      - name: Build
+        run: npm run build
