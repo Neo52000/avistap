@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/*
+ * Palette Avistap — B2B premium.
+ * Encre chaude presque noire, fonds ivoire, accent ambre (l'étoile d'un avis).
+ * Volontairement clair et unique : les plaques se vendent sur la lisibilité,
+ * pas sur un thème sombre.
+ */
+@theme {
+  --color-ink: #17160f;
+  --color-ink-soft: #4a4840;
+  --color-ink-muted: #7b786c;
+
+  --color-canvas: #faf8f3;
+  --color-surface: #ffffff;
+  --color-border: #e6e2d7;
+  --color-border-strong: #d3cec0;
+
+  --color-accent: #b4801a;
+  --color-accent-soft: #fdf3df;
+  --color-accent-strong: #8f6413;
+
+  --color-success: #2f6f4b;
+  --color-success-soft: #e8f3ec;
+  --color-danger: #a2382c;
+  --color-danger-soft: #fbeceb;
+  --color-info: #2c5b86;
+  --color-info-soft: #eaf1f8;
+
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cible tactile confortable dans l'atelier : on valide les étapes avec les
+   doigts, parfois avec des gants. */
+@utility touch-target {
+  min-height: 2.75rem;
+}

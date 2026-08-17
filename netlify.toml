@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Le runtime Next.js de Netlify prend en charge l'App Router, les route
+# handlers et les server actions.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
