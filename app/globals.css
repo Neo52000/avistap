@@ -1,13 +1,16 @@
 @import "tailwindcss";
 
 /*
- * Palette Avistap — B2B premium.
- * Encre chaude presque noire, fonds ivoire, accent ambre (l'étoile d'un avis).
- * Volontairement clair et unique : les plaques se vendent sur la lisibilité,
- * pas sur un thème sombre.
+ * Palette Avistap — B2B premium, chaleureuse.
+ *
+ * Le marché est saturé de bleu « tech » et de blanc clinique. On prend le
+ * contrepied : encre presque noire, fonds ivoire, accent ambre — la couleur de
+ * l'étoile d'un avis. Les blocs sombres servent de respiration et de contraste
+ * pour les moments de démonstration.
  */
 @theme {
   --color-ink: #17160f;
+  --color-ink-deep: #0d0c08;
   --color-ink-soft: #4a4840;
   --color-ink-muted: #7b786c;
 
@@ -19,6 +22,7 @@
   --color-accent: #b4801a;
   --color-accent-soft: #fdf3df;
   --color-accent-strong: #8f6413;
+  --color-accent-bright: #f0b429;
 
   --color-success: #2f6f4b;
   --color-success-soft: #e8f3ec;
@@ -44,4 +48,33 @@ body {
    doigts, parfois avec des gants. */
 @utility touch-target {
   min-height: 2.75rem;
+}
+
+/* Onde NFC du visuel héros. Désactivée si l'utilisateur préfère moins de
+   mouvement. */
+@keyframes nfc-ping {
+  0% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  25% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@utility nfc-wave {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nfc-ping 2.8s cubic-bezier(0.3, 0, 0.4, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nfc-wave {
+    animation: none;
+    opacity: 0.5;
+  }
 }
