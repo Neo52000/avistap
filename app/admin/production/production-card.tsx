@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 
 import { CopyButton } from "@/components/copy-button";
 import { formatDate } from "@/lib/format";
+import { siteUrl as configuredSiteUrl } from "@/lib/site";
 import type { Order, OrderItem } from "@/lib/types";
 
 import { markShipped, startPrinting } from "../actions";
@@ -37,8 +38,10 @@ export function ProductionCard({ order, logoUrl }: Props) {
   const plaqueCount = item?.customizations?.plaque_count;
   const nfcLink = order.nfc_links[0];
 
+  // L'origine du navigateur d'abord (utile en préproduction), sinon la valeur
+  // configurée — jamais un domaine codé en dur.
   const siteUrl =
-    typeof window !== "undefined" ? window.location.origin : "https://avistap.fr";
+    typeof window !== "undefined" ? window.location.origin : configuredSiteUrl();
   const nfcUrl = nfcLink ? `${siteUrl}/r/${nfcLink.slug}` : null;
 
   function run(action: () => Promise<{ ok: true } | { ok: false; error: string }>) {

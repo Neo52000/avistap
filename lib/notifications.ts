@@ -1,6 +1,7 @@
 import "server-only";
 
 import { formatPrice } from "./format";
+import { BRAND, siteUrl, SUPPORT_EMAIL } from "./site";
 import type { Order } from "./types";
 
 /**
@@ -34,8 +35,8 @@ async function sendEmail({ to, toName, subject, html }: SendArgs): Promise<void>
       },
       body: JSON.stringify({
         sender: {
-          email: process.env.BREVO_SENDER_EMAIL ?? "contact@avistap.fr",
-          name: process.env.BREVO_SENDER_NAME ?? "Avistap",
+          email: process.env.BREVO_SENDER_EMAIL ?? SUPPORT_EMAIL,
+          name: process.env.BREVO_SENDER_NAME ?? BRAND,
         },
         to: [{ email: to, name: toName ?? undefined }],
         subject,
@@ -54,8 +55,7 @@ async function sendEmail({ to, toName, subject, html }: SendArgs): Promise<void>
 }
 
 function trackingUrl(order: Order): string {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  return `${base}/suivi/${order.public_token}`;
+  return `${siteUrl()}/suivi/${order.public_token}`;
 }
 
 function layout(title: string, body: string): string {
@@ -63,7 +63,7 @@ function layout(title: string, body: string): string {
 <html lang="fr">
   <body style="margin:0;padding:24px;background:#f6f6f4;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#1c1c1a;">
     <div style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;">
-      <p style="margin:0 0 24px;font-size:18px;font-weight:700;letter-spacing:-0.01em;">Avistap</p>
+      <p style="margin:0 0 24px;font-size:18px;font-weight:700;letter-spacing:-0.01em;">${BRAND}</p>
       <h1 style="margin:0 0 16px;font-size:20px;line-height:1.3;">${title}</h1>
       ${body}
       <p style="margin:32px 0 0;font-size:13px;color:#6b6b64;">

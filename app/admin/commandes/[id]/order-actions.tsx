@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { CopyButton } from "@/components/copy-button";
+import { siteUrl as configuredSiteUrl } from "@/lib/site";
 import type { NfcLink, Order } from "@/lib/types";
 
 import {
@@ -35,8 +36,10 @@ export function OrderActions({ order, nfcLink, googleLink }: Props) {
   const [notes, setNotes] = useState(order.admin_notes ?? "");
   const [target, setTarget] = useState(nfcLink?.target_url ?? googleLink ?? "");
 
+  // L'origine du navigateur d'abord (utile en préproduction), sinon la valeur
+  // configurée — jamais un domaine codé en dur.
   const siteUrl =
-    typeof window !== "undefined" ? window.location.origin : "https://avistap.fr";
+    typeof window !== "undefined" ? window.location.origin : configuredSiteUrl();
 
   function run(action: () => Promise<ActionResult>, successText: string) {
     setMessage(null);

@@ -66,7 +66,7 @@ export async function markOrderPaid(
  * Crée le lien court encodé sur la puce.
  *
  * C'est cette indirection qui rend la plaque réutilisable : la puce contient
- * l'adresse Avistap, jamais le lien Google, qu'on peut donc changer plus tard
+ * l'adresse AvisTap, jamais le lien Google, qu'on peut donc changer plus tard
  * sans toucher au support physique.
  */
 async function createNfcLink(

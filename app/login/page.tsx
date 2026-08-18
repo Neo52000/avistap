@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+import { BRAND } from "@/lib/site";
+
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
@@ -13,7 +15,7 @@ export default function LoginPage() {
     <div className="grid min-h-screen place-items-center px-5 py-12">
       <div className="w-full max-w-sm">
         <p className="text-center text-lg font-bold tracking-tight text-ink">
-          Avistap
+          {BRAND}
         </p>
         <h1 className="mt-1 text-center text-sm text-ink-muted">
           Accès atelier

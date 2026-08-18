@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { BRAND, SUPPORT_EMAIL } from "@/lib/site";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
@@ -60,13 +61,13 @@ function notFound() {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Lien introuvable · Avistap</title>
+    <title>Lien introuvable · ${BRAND}</title>
   </head>
   <body style="margin:0;display:grid;place-items:center;min-height:100vh;background:#faf8f3;color:#17160f;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;text-align:center;padding:24px;">
     <div>
-      <p style="font-size:18px;font-weight:700;margin:0 0 12px;">Avistap</p>
+      <p style="font-size:18px;font-weight:700;margin:0 0 12px;">${BRAND}</p>
       <h1 style="font-size:20px;margin:0 0 8px;">Ce lien n'est plus actif</h1>
-      <p style="color:#4a4840;margin:0;">Contactez l'établissement ou écrivez-nous à contact@avistap.fr.</p>
+      <p style="color:#4a4840;margin:0;">Contactez l'établissement ou écrivez-nous à ${SUPPORT_EMAIL}.</p>
     </div>
   </body>
 </html>`,

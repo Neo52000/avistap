@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { requireAdmin } from "@/lib/auth";
+import { BRAND } from "@/lib/site";
 
 import { SignOutButton } from "./sign-out-button";
 
@@ -25,7 +26,7 @@ export default async function AdminLayout({
       <header className="sticky top-0 z-10 border-b border-border bg-surface">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
           <Link href="/admin" className="font-bold tracking-tight text-ink">
-            Avistap<span className="ml-1.5 text-xs font-medium text-ink-muted">atelier</span>
+            {BRAND}<span className="ml-1.5 text-xs font-medium text-ink-muted">atelier</span>
           </Link>
           <div className="flex items-center gap-3">
             <span className="hidden text-xs text-ink-muted sm:block">
