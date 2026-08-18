@@ -57,6 +57,9 @@ export type Order = {
   tracking_number: string | null;
   carrier: string | null;
   admin_notes: string | null;
+  profile_id: string | null;
+  discount_cents: number;
+  referral_code: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -104,4 +107,37 @@ export type OrderTracking = {
   tracking_number: string | null;
   carrier: string | null;
   events: { to_status: OrderStatus; note: string | null; created_at: string }[];
+};
+
+export type NfcScanDaily = {
+  nfc_link_id: string;
+  day: string;
+  count: number;
+};
+
+export type ReferralCode = {
+  id: string;
+  profile_id: string;
+  code: string;
+  active: boolean;
+  created_at: string;
+};
+
+export type Referral = {
+  id: string;
+  referrer_profile_id: string;
+  referred_order_id: string;
+  status: "pending" | "validated" | "cancelled";
+  reward_cents: number;
+  created_at: string;
+};
+
+export type Credit = {
+  id: string;
+  profile_id: string;
+  amount_cents: number;
+  reason: string;
+  order_id: string | null;
+  referral_id: string | null;
+  created_at: string;
 };

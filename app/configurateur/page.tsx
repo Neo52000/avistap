@@ -16,9 +16,12 @@ export const metadata: Metadata = {
 export default async function ConfiguratorPage({
   searchParams,
 }: {
-  searchParams: Promise<{ pack?: string }>;
+  searchParams: Promise<{ pack?: string; code?: string }>;
 }) {
-  const [{ pack }, supabase] = await Promise.all([searchParams, createClient()]);
+  const [{ pack, code }, supabase] = await Promise.all([
+    searchParams,
+    createClient(),
+  ]);
   const { products, options } = await fetchCatalog(supabase);
 
   return (
@@ -38,6 +41,7 @@ export default async function ConfiguratorPage({
             products={products}
             options={options}
             initialProductSlug={pack}
+            initialReferralCode={code}
           />
         </div>
       </main>

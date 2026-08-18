@@ -46,6 +46,15 @@ export async function GET(
       if (updateError) console.error("[nfc] Incrément impossible :", updateError);
     });
 
+  // Rollup journalier, qui alimente les courbes de l'espace commerçant.
+  // Comme le compteur : on n'attend pas, et un échec ne casse pas la
+  // redirection.
+  void supabase
+    .rpc("record_nfc_scan", { p_link_id: link.id })
+    .then(({ error: scanError }) => {
+      if (scanError) console.error("[nfc] Rollup impossible :", scanError);
+    });
+
   // 302 : la cible peut changer, elle ne doit jamais être mise en cache
   // durablement par le navigateur.
   return NextResponse.redirect(link.target_url, {

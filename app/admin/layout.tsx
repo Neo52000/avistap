@@ -1,15 +1,18 @@
 import Link from "next/link";
 
+import { SignOutButton } from "@/components/sign-out-button";
 import { requireAdmin } from "@/lib/auth";
 import { BRAND } from "@/lib/site";
-
-import { SignOutButton } from "./sign-out-button";
 
 const NAV = [
   { href: "/admin", label: "Tableau de bord" },
   { href: "/admin/production", label: "Production" },
   { href: "/admin/commandes", label: "Commandes" },
   { href: "/admin/produits", label: "Produits" },
+  { href: "/admin/clients", label: "Clients" },
+  { href: "/admin/parrainage", label: "Parrainage" },
+  { href: "/admin/liens", label: "Liens NFC" },
+  { href: "/admin/statistiques", label: "Statistiques" },
 ];
 
 export default async function AdminLayout({

@@ -3,8 +3,14 @@ import { NextResponse } from "next/server";
 import { fetchCatalog } from "@/lib/catalog";
 import { markOrderPaid } from "@/lib/orders-server";
 import { computeQuote, PricingError } from "@/lib/pricing";
+import {
+  consumeCredit,
+  getCreditBalance,
+  resolveReferralCode,
+} from "@/lib/referrals";
 import { getStripe, siteUrl } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { checkoutSchema } from "@/lib/validation";
 
 /**
@@ -33,6 +39,26 @@ export async function POST(request: Request) {
   const payload = parsed.data;
   const supabase = createAdminClient();
 
+  // --- Qui commande ? -------------------------------------------------------
+  // Le tunnel reste ouvert aux invités ; si une session existe, on rattache la
+  // commande et on autorise l'usage du solde d'avoirs.
+  const sessionClient = await createClient();
+  const {
+    data: { user },
+  } = await sessionClient.auth.getUser();
+
+  const profileId = user?.id ?? null;
+  const creditCents = profileId ? await getCreditBalance(supabase, profileId) : 0;
+
+  // Le code est revalidé en base : celui envoyé par le navigateur ne prouve
+  // rien, et un code inconnu ne doit pas silencieusement offrir la remise.
+  const referrer = payload.referralCode
+    ? await resolveReferralCode(supabase, payload.referralCode)
+    : null;
+
+  // On ne se parraine pas soi-même.
+  const referralApplies = Boolean(referrer) && referrer!.profileId !== profileId;
+
   // --- Prix faisant foi -----------------------------------------------------
   let quote;
   try {
@@ -41,6 +67,7 @@ export async function POST(request: Request) {
       { productSlug: payload.productSlug, optionSlugs: payload.optionSlugs },
       products,
       options,
+      { referralApplies, creditCents },
     );
   } catch (error) {
     if (error instanceof PricingError) {
@@ -64,8 +91,11 @@ export async function POST(request: Request) {
       shipping_address: payload.shippingAddress,
       subtotal_cents: quote.subtotalCents,
       shipping_cents: quote.shippingCents,
+      discount_cents: quote.discountCents,
       total_amount_cents: quote.totalCents,
       status: "awaiting_payment",
+      profile_id: profileId,
+      referral_code: referralApplies ? referrer!.code : null,
       google_business_link: payload.googleBusinessLink,
       logo_url: payload.logoPath || null,
     })
@@ -100,6 +130,17 @@ export async function POST(request: Request) {
     console.error("[checkout] Enregistrement des lignes impossible :", itemError);
   }
 
+  // L'avoir est consommé dès la création de la commande : le montant est déjà
+  // déduit du total envoyé à Stripe, le laisser disponible permettrait de le
+  // dépenser deux fois.
+  if (profileId && quote.creditAppliedCents > 0) {
+    await consumeCredit(supabase, {
+      profileId,
+      orderId: order.id,
+      amountCents: quote.creditAppliedCents,
+    });
+  }
+
   // --- Paiement -------------------------------------------------------------
   const stripe = getStripe();
 
@@ -123,7 +164,10 @@ export async function POST(request: Request) {
           quantity: 1,
           price_data: {
             currency: "eur",
-            unit_amount: quote.subtotalCents,
+            unit_amount: Math.max(
+              quote.subtotalCents - quote.discountCents - quote.creditAppliedCents,
+              0,
+            ),
             product_data: {
               name: quote.product.name,
               description:
