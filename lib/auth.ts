@@ -41,3 +41,30 @@ export async function requireAdmin(): Promise<AdminUser> {
 
   return { id: user.id, email: user.email ?? "" };
 }
+
+export type MerchantUser = {
+  id: string;
+  email: string;
+};
+
+/**
+ * Contrôle serveur d'un commerçant connecté.
+ *
+ * Aucun rôle particulier n'est exigé : tout compte authentifié est un
+ * commerçant. Le cloisonnement des données ne repose pas sur ce contrôle mais
+ * sur la RLS, qui filtre par `profile_id` — cette fonction ne fait que garantir
+ * qu'une session existe avant d'afficher l'espace.
+ */
+export async function requireMerchant(): Promise<MerchantUser> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/espace/connexion");
+  }
+
+  return { id: user.id, email: user.email ?? "" };
+}

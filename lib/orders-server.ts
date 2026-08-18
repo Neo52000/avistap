@@ -3,6 +3,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { sendOrderConfirmation } from "./notifications";
+import { creditReferrer, resolveReferralCode } from "./referrals";
 import type { Order } from "./types";
 
 const SLUG_ALPHABET = "abcdefghijkmnpqrstuvwxyz23456789"; // sans o/l/0/1
@@ -57,6 +58,7 @@ export async function markOrderPaid(
   });
 
   await createNfcLink(supabase, typedOrder);
+  await creditReferrerIfAny(supabase, typedOrder);
   await sendOrderConfirmation(typedOrder);
 
   return typedOrder;
@@ -66,7 +68,7 @@ export async function markOrderPaid(
  * Crée le lien court encodé sur la puce.
  *
  * C'est cette indirection qui rend la plaque réutilisable : la puce contient
- * l'adresse Avistap, jamais le lien Google, qu'on peut donc changer plus tard
+ * l'adresse AvisTap, jamais le lien Google, qu'on peut donc changer plus tard
  * sans toucher au support physique.
  */
 async function createNfcLink(
@@ -94,4 +96,30 @@ async function createNfcLink(
   console.error(
     `[orders] Aucun slug NFC libre après 5 tentatives (commande ${order.order_number})`,
   );
+}
+
+/**
+ * Crédite le parrain si la commande portait un code.
+ *
+ * Appelé depuis `markOrderPaid`, donc protégé par la même garde
+ * d'idempotence : la mise à jour conditionnée au statut ne laisse passer
+ * qu'un seul appel, et l'unicité de `referrals.referred_order_id` bloque le
+ * reste.
+ */
+async function creditReferrerIfAny(
+  supabase: SupabaseClient,
+  order: Order,
+): Promise<void> {
+  if (!order.referral_code) return;
+
+  const referrer = await resolveReferralCode(supabase, order.referral_code);
+  if (!referrer) return;
+
+  // Un commerçant ne se parraine pas lui-même.
+  if (referrer.profileId === order.profile_id) return;
+
+  await creditReferrer(supabase, {
+    referrerProfileId: referrer.profileId,
+    orderId: order.id,
+  });
 }

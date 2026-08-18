@@ -36,10 +36,22 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && request.nextUrl.pathname.startsWith("/admin")) {
+  const { pathname } = request.nextUrl;
+
+  if (!user && pathname.startsWith("/admin")) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+    loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // `/espace/connexion` doit rester joignable sans session, sinon la page de
+  // connexion se redirige vers elle-même.
+  if (
+    !user &&
+    pathname.startsWith("/espace") &&
+    !pathname.startsWith("/espace/connexion")
+  ) {
+    return NextResponse.redirect(new URL("/espace/connexion", request.url));
   }
 
   return response;
@@ -50,8 +62,10 @@ export const config = {
     /*
      * Toutes les routes sauf les fichiers statiques et les images optimisées.
      * `/api/stripe/webhook` est exclu : la signature Stripe est calculée sur le
-     * corps brut et la requête ne porte aucun cookie de session.
+     * corps brut et la requête ne porte aucun cookie de session. `/r/` l'est
+     * aussi : la redirection NFC doit être la plus rapide possible et n'a
+     * jamais besoin de session.
      */
-    "/((?!_next/static|_next/image|favicon.ico|api/stripe/webhook|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/stripe/webhook|r/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

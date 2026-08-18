@@ -1,14 +1,18 @@
 import Link from "next/link";
 
+import { SignOutButton } from "@/components/sign-out-button";
 import { requireAdmin } from "@/lib/auth";
-
-import { SignOutButton } from "./sign-out-button";
+import { BRAND } from "@/lib/site";
 
 const NAV = [
   { href: "/admin", label: "Tableau de bord" },
   { href: "/admin/production", label: "Production" },
   { href: "/admin/commandes", label: "Commandes" },
   { href: "/admin/produits", label: "Produits" },
+  { href: "/admin/clients", label: "Clients" },
+  { href: "/admin/parrainage", label: "Parrainage" },
+  { href: "/admin/liens", label: "Liens NFC" },
+  { href: "/admin/statistiques", label: "Statistiques" },
 ];
 
 export default async function AdminLayout({
@@ -25,7 +29,7 @@ export default async function AdminLayout({
       <header className="sticky top-0 z-10 border-b border-border bg-surface">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
           <Link href="/admin" className="font-bold tracking-tight text-ink">
-            Avistap<span className="ml-1.5 text-xs font-medium text-ink-muted">atelier</span>
+            {BRAND}<span className="ml-1.5 text-xs font-medium text-ink-muted">atelier</span>
           </Link>
           <div className="flex items-center gap-3">
             <span className="hidden text-xs text-ink-muted sm:block">

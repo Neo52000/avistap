@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { formatDate, formatDateTime, STATUS_LABELS, TRACKING_STEPS } from "@/lib/format";
+import { SUPPORT_EMAIL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 import type { OrderTracking } from "@/lib/types";
 
@@ -62,7 +63,7 @@ export default async function TrackingPage({
             <div className="mt-8 rounded-xl border border-danger bg-danger-soft p-6">
               <p className="font-semibold text-danger">Commande annulée</p>
               <p className="mt-1 text-sm text-ink-soft">
-                Une question ? Écrivez-nous à contact@avistap.fr.
+                Une question ? Écrivez-nous à {SUPPORT_EMAIL}.
               </p>
             </div>
           ) : (

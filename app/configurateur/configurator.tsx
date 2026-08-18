@@ -13,11 +13,17 @@ type Props = {
   products: Product[];
   options: ProductOption[];
   initialProductSlug?: string;
+  initialReferralCode?: string;
 };
 
 type FieldErrors = Record<string, string>;
 
-export function Configurator({ products, options, initialProductSlug }: Props) {
+export function Configurator({
+  products,
+  options,
+  initialProductSlug,
+  initialReferralCode,
+}: Props) {
   const [productSlug, setProductSlug] = useState(
     () =>
       products.find((p) => p.slug === initialProductSlug)?.slug ??
@@ -33,6 +39,7 @@ export function Configurator({ products, options, initialProductSlug }: Props) {
   const [phone, setPhone] = useState("");
   const [googleBusinessLink, setGoogleBusinessLink] = useState("");
   const [logoPath, setLogoPath] = useState("");
+  const [referralCode, setReferralCode] = useState(initialReferralCode ?? "");
 
   const [line1, setLine1] = useState("");
   const [line2, setLine2] = useState("");
@@ -75,6 +82,7 @@ export function Configurator({ products, options, initialProductSlug }: Props) {
       phone,
       googleBusinessLink,
       logoPath,
+      referralCode,
       shippingAddress: {
         line1,
         line2,
@@ -273,6 +281,20 @@ export function Configurator({ products, options, initialProductSlug }: Props) {
             </Field>
           </div>
 
+          <Field
+            label="Code de parrainage (facultatif)"
+            hint="Un confrère vous a donné un code ? Saisissez-le pour obtenir votre remise."
+            error={errors.referralCode}
+          >
+            <input
+              type="text"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+              placeholder="XXXXXX"
+              className={`${inputClass} font-mono uppercase`}
+            />
+          </Field>
+
           <Field label="Téléphone (facultatif)" error={errors.phone}>
             <input
               type="tel"
@@ -357,6 +379,15 @@ export function Configurator({ products, options, initialProductSlug }: Props) {
                     </dd>
                   </div>
                 ))}
+
+                {referralCode.trim() !== "" && (
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-ink-soft">Code de parrainage</dt>
+                    <dd className="font-medium text-success">
+                      vérifié au paiement
+                    </dd>
+                  </div>
+                )}
 
                 <div className="flex justify-between gap-4 border-t border-border pt-2">
                   <dt className="text-ink-soft">Livraison</dt>

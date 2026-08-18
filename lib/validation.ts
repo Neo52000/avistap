@@ -71,6 +71,9 @@ export const checkoutSchema = z.object({
   logoPath: z.string().trim().max(400).optional().or(z.literal("")),
 
   shippingAddress: shippingAddressSchema,
+
+  /** Code de parrainage saisi par le filleul. Revalidé côté serveur. */
+  referralCode: z.string().trim().max(32).optional().or(z.literal("")),
 });
 
 export type CheckoutPayload = z.infer<typeof checkoutSchema>;
