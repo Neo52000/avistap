@@ -20,6 +20,6 @@ export function isStripeConfigured(): boolean {
   return Boolean(process.env.STRIPE_SECRET_KEY);
 }
 
-export function siteUrl(): string {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-}
+// Réexport de commodité : la définition vit dans lib/site.ts, avec le reste
+// de l'identité du site.
+export { siteUrl } from "./site";

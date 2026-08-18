@@ -1,4 +1,4 @@
-# Avistap — la plaque avis
+# AvisTap — La plaque avis
 
 [![CI](https://github.com/Neo52000/avistap/actions/workflows/ci.yml/badge.svg)](https://github.com/Neo52000/avistap/actions/workflows/ci.yml)
 
@@ -111,6 +111,23 @@ dans la Queue de production, avec un bouton « copier », prêt pour l'encodeur.
 `pending` signifie **payée et à produire** : c'est exactement le filtre de la
 Queue de production. Le passage en `shipped` déclenche l'email client.
 
+## Marque et métadonnées
+
+La marque s'écrit **AvisTap** (T majuscule), accompagnée du descripteur
+« La plaque avis ». `lib/site.ts` en est la source unique : nom, descripteur,
+email de contact et URL publique. Rien n'est codé en dur ailleurs — changer de
+domaine ou d'adresse de contact se fait à un seul endroit.
+
+Trois variables pilotent l'identité (voir `.env.example`) :
+`NEXT_PUBLIC_SITE_NAME`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPPORT_EMAIL`.
+
+> **Allégation à étayer.** La meta-description annonce « Multipliez vos avis
+> Google par 5 ». Une allégation chiffrée doit pouvoir être justifiée
+> (art. L121-2 du code de la consommation, pratiques commerciales trompeuses).
+> Sans mesure à l'appui — par exemple un avant/après sur un panel de clients —
+> préférer une formulation qualitative. La ligne est isolée et commentée dans
+> `app/layout.tsx`.
+
 ## Sécurité
 
 - **RLS active sur toutes les tables.** Le catalogue actif est lisible
@@ -169,6 +186,7 @@ lib/
   pricing.ts                  source unique du calcul de prix
   orders-server.ts            transition « payée », génération du lien NFC
   supabase/{client,server,admin}.ts
+  site.ts                     marque, URL publique, email de contact
   auth.ts  storage.ts  notifications.ts  validation.ts
 supabase/migrations/
 ```

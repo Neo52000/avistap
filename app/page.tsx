@@ -53,7 +53,7 @@ const FAQ = [
   {
     question: "Que se passe-t-il si je change de fiche Google ?",
     answer:
-      "Rien à refaire. La puce contient une adresse Avistap, pas votre lien Google : nous redirigeons cette adresse vers votre nouvelle fiche et vos plaques continuent de fonctionner. Chez la plupart de nos confrères, la puce est encodée en dur avec votre lien — changer de fiche impose de racheter les plaques.",
+      "Rien à refaire. La puce contient une adresse AvisTap, pas votre lien Google : nous redirigeons cette adresse vers votre nouvelle fiche et vos plaques continuent de fonctionner. Chez la plupart de nos confrères, la puce est encodée en dur avec votre lien — changer de fiche impose de racheter les plaques.",
   },
   {
     question: "Y a-t-il un abonnement ?",
@@ -183,7 +183,7 @@ export default async function HomePage() {
 
               <div className="rounded-2xl border border-accent-bright/30 bg-accent-bright/[0.07] p-6">
                 <p className="text-sm font-semibold text-accent-bright">
-                  Avistap
+                  AvisTap
                 </p>
                 <p className="mt-3 font-mono text-sm text-white">
                   puce → avistap.fr/r/k7m2p9 → votre fiche
@@ -239,7 +239,7 @@ export default async function HomePage() {
                   <tr className="border-b border-border-strong text-left">
                     <th className="pb-3 pr-4 font-semibold text-ink">&nbsp;</th>
                     <th className="pb-3 pr-4 font-semibold text-ink">
-                      Avistap
+                      AvisTap
                     </th>
                     <th className="pb-3 pr-4 font-medium text-ink-muted">
                       Autocollant QR

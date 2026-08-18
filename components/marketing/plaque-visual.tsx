@@ -11,7 +11,7 @@ export function PlaqueVisual({ className }: { className?: string }) {
       viewBox="0 0 420 360"
       fill="none"
       role="img"
-      aria-label="Un téléphone approché d'une plaque Avistap ouvre le formulaire d'avis Google"
+      aria-label="Un téléphone approché d'une plaque AvisTap ouvre le formulaire d'avis Google"
       className={className}
     >
       {/* Halo */}
